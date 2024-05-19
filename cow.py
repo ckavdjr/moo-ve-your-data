@@ -48,7 +48,64 @@ class FarmApp:
         conn.close()
 
     def add_cow(self):
-        pass
+        # Create a new window for adding a cow
+        add_window = tk.Toplevel(self.root)
+        add_window.title("Add Cow")
+
+        # Create labels and entry fields for input
+        tk.Label(add_window, text="Cow ID:").grid(row=0, column=0, padx=5, pady=5)
+        cow_id_entry = tk.Entry(add_window)
+        cow_id_entry.grid(row=0, column=1, padx=5, pady=5)
+
+        tk.Label(add_window, text="Gender:").grid(row=1, column=0, padx=5, pady=5)
+        gender_entry = tk.Entry(add_window)
+        gender_entry.grid(row=1, column=1, padx=5, pady=5)
+
+        tk.Label(add_window, text="DOB (DD-MM-YYYY):").grid(row=2, column=0, padx=5, pady=5)
+        dob_entry = tk.Entry(add_window)
+        dob_entry.grid(row=2, column=1, padx=5, pady=5)
+
+        tk.Label(add_window, text="Colour:").grid(row=3, column=0, padx=5, pady=5)
+        colour_entry = tk.Entry(add_window)
+        colour_entry.grid(row=3, column=1, padx=5, pady=5)
+
+        tk.Label(add_window, text="Breed:").grid(row=4, column=0, padx=5, pady=5)
+        breed_entry = tk.Entry(add_window)
+        breed_entry.grid(row=4, column=1, padx=5, pady=5)
+
+        tk.Label(add_window, text="Identification Mark:").grid(row=5, column=0, padx=5, pady=5)
+        mark_entry = tk.Entry(add_window)
+        mark_entry.grid(row=5, column=1, padx=5, pady=5)
+
+        # Button to confirm adding cow
+        tk.Button(add_window, text="Add Cow", command=lambda: self.add_cow_to_db(add_window, cow_id_entry, gender_entry, dob_entry, colour_entry, breed_entry, mark_entry)).grid(row=6, column=0, columnspan=2, padx=5, pady=10)
+
+    def add_cow_to_db(self, add_window, cow_id_entry, gender_entry, dob_entry, colour_entry, breed_entry, mark_entry):
+        conn = sqlite3.connect("farm.db")
+        c = conn.cursor()
+
+        # Retrieve values from entry fields
+        cow_id = cow_id_entry.get()
+        gender = gender_entry.get()
+        dob = dob_entry.get()
+        colour = colour_entry.get()
+        breed = breed_entry.get()
+        identification_mark = mark_entry.get()
+
+        # Insert values into the database
+        c.execute("INSERT INTO cows (cow_id, gender, dob, colour, breed, identification_mark) VALUES (?, ?, ?, ?, ?, ?)",
+                (cow_id, gender, dob, colour, breed, identification_mark))
+
+        conn.commit()
+        conn.close()
+
+        # Close the add window
+        add_window.destroy()
+
+        # Refresh the data in the treeview
+        self.tree.delete(*self.tree.get_children())
+        self.load_data()
+
 
     def edit_cow(self):
         pass
