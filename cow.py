@@ -337,7 +337,22 @@ class FarmApp:
 
 
     def delete_disease(self, tree):
-        pass
+        selected_item = tree.selection()
+        if not selected_item:
+            return
+
+        disease_id = tree.item(selected_item[0], 'text')
+
+        conn = sqlite3.connect("farm.db")
+        c = conn.cursor()
+
+        c.execute("DELETE FROM diseases WHERE disease_id = ?", (disease_id,))
+
+        conn.commit()
+        conn.close()
+
+        tree.delete(selected_item[0])
+
 
     def add_vaccination(self, cow_id, tree):
         add_window = tk.Toplevel(self.root)
@@ -409,7 +424,22 @@ class FarmApp:
 
 
     def delete_vaccination(self, tree):
-        pass
+        selected_item = tree.selection()
+        if not selected_item:
+            return
+
+        vaccination_id = tree.item(selected_item[0], 'text')
+
+        conn = sqlite3.connect("farm.db")
+        c = conn.cursor()
+
+        c.execute("DELETE FROM vaccinations WHERE vaccination_id = ?", (vaccination_id,))
+
+        conn.commit()
+        conn.close()
+
+        tree.delete(selected_item[0])
+
 
 
 if __name__ == "__main__":
