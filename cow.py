@@ -298,7 +298,43 @@ class FarmApp:
 
 
     def edit_disease(self, cow_id, tree):
-        pass
+        selected_item = tree.selection()
+        if not selected_item:
+            return
+
+        disease_id = tree.item(selected_item[0], 'text')
+
+        edit_window = tk.Toplevel(self.root)
+        edit_window.title("Edit Disease")
+
+        tk.Label(edit_window, text="Disease:").grid(row=0, column=0, padx=5, pady=5)
+        disease_entry = tk.Entry(edit_window)
+        disease_entry.grid(row=0, column=1, padx=5, pady=5)
+        disease_entry.insert(0, tree.item(selected_item[0], 'values')[0])
+
+        tk.Label(edit_window, text="Date (YYYY-MM-DD):").grid(row=1, column=0, padx=5, pady=5)
+        date_entry = tk.Entry(edit_window)
+        date_entry.grid(row=1, column=1, padx=5, pady=5)
+        date_entry.insert(0, tree.item(selected_item[0], 'values')[1])
+
+        tk.Button(edit_window, text="Update", command=lambda: self.edit_disease_in_db(edit_window, disease_id, disease_entry, date_entry, tree, selected_item)).grid(row=2, column=0, columnspan=2, pady=10)
+
+
+    def edit_disease_in_db(self, edit_window, disease_id, disease_entry, date_entry, tree, selected_item):
+        conn = sqlite3.connect("farm.db")
+        c = conn.cursor()
+
+        disease = disease_entry.get()
+        date = date_entry.get()
+
+        c.execute("UPDATE diseases SET disease = ?, date = ? WHERE disease_id = ?", (disease, date, disease_id))
+
+        conn.commit()
+        conn.close()
+
+        edit_window.destroy()
+        tree.item(selected_item, values=(disease, date))
+
 
     def delete_disease(self, tree):
         pass
@@ -334,7 +370,43 @@ class FarmApp:
 
 
     def edit_vaccination(self, cow_id, tree):
-        pass
+        selected_item = tree.selection()
+        if not selected_item:
+            return
+
+        vaccination_id = tree.item(selected_item[0], 'text')
+
+        edit_window = tk.Toplevel(self.root)
+        edit_window.title("Edit Vaccination")
+
+        tk.Label(edit_window, text="Vaccination:").grid(row=0, column=0, padx=5, pady=5)
+        vaccination_entry = tk.Entry(edit_window)
+        vaccination_entry.grid(row=0, column=1, padx=5, pady=5)
+        vaccination_entry.insert(0, tree.item(selected_item[0], 'values')[0])
+
+        tk.Label(edit_window, text="Date (YYYY-MM-DD):").grid(row=1, column=0, padx=5, pady=5)
+        date_entry = tk.Entry(edit_window)
+        date_entry.grid(row=1, column=1, padx=5, pady=5)
+        date_entry.insert(0, tree.item(selected_item[0], 'values')[1])
+
+        tk.Button(edit_window, text="Update", command=lambda: self.edit_vaccination_in_db(edit_window, vaccination_id, vaccination_entry, date_entry, tree, selected_item)).grid(row=2, column=0, columnspan=2, pady=10)
+
+
+    def edit_vaccination_in_db(self, edit_window, vaccination_id, vaccination_entry, date_entry, tree, selected_item):
+        conn = sqlite3.connect("farm.db")
+        c = conn.cursor()
+
+        vaccination = vaccination_entry.get()
+        date = date_entry.get()
+
+        c.execute("UPDATE vaccinations SET vaccination = ?, date = ? WHERE vaccination_id = ?", (vaccination, date, vaccination_id))
+
+        conn.commit()
+        conn.close()
+
+        edit_window.destroy()
+        tree.item(selected_item, values=(vaccination, date))
+
 
     def delete_vaccination(self, tree):
         pass
