@@ -106,9 +106,79 @@ class FarmApp:
         self.tree.delete(*self.tree.get_children())
         self.load_data()
 
-
     def edit_cow(self):
-        pass
+        selected_item = self.tree.selection()
+        if not selected_item:
+            return
+
+        item = self.tree.item(selected_item)
+        cow_id = item['text']
+        values = item['values']
+
+        edit_window = tk.Toplevel(self.root)
+        edit_window.title("Edit Cow")
+
+        # Create labels and entry fields pre-filled with existing values
+        tk.Label(edit_window, text="Cow ID:").grid(row=0, column=0, padx=5, pady=5)
+        cow_id_entry = tk.Entry(edit_window)
+        cow_id_entry.grid(row=0, column=1, padx=5, pady=5)
+        cow_id_entry.insert(0, cow_id)
+        cow_id_entry.config(state='disabled')
+
+        tk.Label(edit_window, text="Gender:").grid(row=1, column=0, padx=5, pady=5)
+        gender_entry = tk.Entry(edit_window)
+        gender_entry.grid(row=1, column=1, padx=5, pady=5)
+        gender_entry.insert(0, values[0])
+
+        tk.Label(edit_window, text="DOB (DD-MM-YYYY):").grid(row=2, column=0, padx=5, pady=5)
+        dob_entry = tk.Entry(edit_window)
+        dob_entry.grid(row=2, column=1, padx=5, pady=5)
+        dob_entry.insert(0, values[1])
+
+        tk.Label(edit_window, text="Colour:").grid(row=3, column=0, padx=5, pady=5)
+        colour_entry = tk.Entry(edit_window)
+        colour_entry.grid(row=3, column=1, padx=5, pady=5)
+        colour_entry.insert(0, values[2])
+
+        tk.Label(edit_window, text="Breed:").grid(row=4, column=0, padx=5, pady=5)
+        breed_entry = tk.Entry(edit_window)
+        breed_entry.grid(row=4, column=1, padx=5, pady=5)
+        breed_entry.insert(0, values[3])
+
+        tk.Label(edit_window, text="Identification Mark:").grid(row=5, column=0, padx=5, pady=5)
+        mark_entry = tk.Entry(edit_window)
+        mark_entry.grid(row=5, column=1, padx=5, pady=5)
+        mark_entry.insert(0, values[4])
+
+        # Button to confirm editing cow
+        tk.Button(edit_window, text="Update Cow", command=lambda: self.update_cow_in_db(edit_window, cow_id, gender_entry, dob_entry, colour_entry, breed_entry, mark_entry)).grid(row=6, column=0, columnspan=2, padx=5, pady=10)
+
+    def update_cow_in_db(self, edit_window, cow_id, gender_entry, dob_entry, colour_entry, breed_entry, mark_entry):
+        conn = sqlite3.connect("farm.db")
+        c = conn.cursor()
+
+        # Retrieve values from entry fields
+        gender = gender_entry.get()
+        dob = dob_entry.get()
+        colour = colour_entry.get()
+        breed = breed_entry.get()
+        identification_mark = mark_entry.get()
+
+        # Update values in the database
+        c.execute("""UPDATE cows
+                     SET gender = ?, dob = ?, colour = ?, breed = ?, identification_mark = ?
+                     WHERE cow_id = ?""",
+                  (gender, dob, colour, breed, identification_mark, cow_id))
+
+        conn.commit()
+        conn.close()
+
+        # Close the edit window
+        edit_window.destroy()
+
+        # Refresh the data in the treeview
+        self.tree.delete(*self.tree.get_children())
+        self.load_data()
 
     def delete_cow(self):
         pass
