@@ -111,9 +111,8 @@ class FarmApp:
         if not selected_item:
             return
 
-        item = self.tree.item(selected_item)
-        cow_id = item['text']
-        values = item['values']
+        cow_id = self.tree.item(selected_item[0], 'text')
+        values = self.tree.item(selected_item[0], 'values')
 
         edit_window = tk.Toplevel(self.root)
         edit_window.title("Edit Cow")
@@ -181,8 +180,23 @@ class FarmApp:
         self.load_data()
 
     def delete_cow(self):
-        pass
+        selected_item = self.tree.selection()
+        if not selected_item:
+            return
 
+        cow_id = self.tree.item(selected_item[0], 'text')
+
+        conn = sqlite3.connect("farm.db")
+        c = conn.cursor()
+
+        # Delete the selected cow from the database
+        c.execute("DELETE FROM cows WHERE cow_id = ?", (cow_id,))
+
+        conn.commit()
+        conn.close()
+
+        # Remove the selected item from the treeview
+        self.tree.delete(selected_item[0])
 
 if __name__ == "__main__":
     root = tk.Tk()
