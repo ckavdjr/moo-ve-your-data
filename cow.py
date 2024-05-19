@@ -267,7 +267,35 @@ class FarmApp:
 
 
     def add_disease(self, cow_id, tree):
-        pass
+        add_window = tk.Toplevel(self.root)
+        add_window.title("Add Disease")
+
+        tk.Label(add_window, text="Disease:").grid(row=0, column=0, padx=5, pady=5)
+        disease_entry = tk.Entry(add_window)
+        disease_entry.grid(row=0, column=1, padx=5, pady=5)
+
+        tk.Label(add_window, text="Date (YYYY-MM-DD):").grid(row=1, column=0, padx=5, pady=5)
+        date_entry = tk.Entry(add_window)
+        date_entry.grid(row=1, column=1, padx=5, pady=5)
+
+        tk.Button(add_window, text="Add", command=lambda: self.add_disease_to_db(add_window, cow_id, disease_entry, date_entry, tree)).grid(row=2, column=0, columnspan=2, pady=10)
+
+
+    def add_disease_to_db(self, add_window, cow_id, disease_entry, date_entry, tree):
+        conn = sqlite3.connect("farm.db")
+        c = conn.cursor()
+
+        disease = disease_entry.get()
+        date = date_entry.get()
+
+        c.execute("INSERT INTO diseases (cow_id, disease, date) VALUES (?, ?, ?)", (cow_id, disease, date))
+
+        conn.commit()
+        conn.close()
+
+        add_window.destroy()
+        tree.insert("", "end", values=(disease, date))
+
 
     def edit_disease(self, cow_id, tree):
         pass
@@ -276,7 +304,34 @@ class FarmApp:
         pass
 
     def add_vaccination(self, cow_id, tree):
-        pass
+        add_window = tk.Toplevel(self.root)
+        add_window.title("Add Vaccination")
+
+        tk.Label(add_window, text="Vaccination:").grid(row=0, column=0, padx=5, pady=5)
+        vaccination_entry = tk.Entry(add_window)
+        vaccination_entry.grid(row=0, column=1, padx=5, pady=5)
+
+        tk.Label(add_window, text="Date (YYYY-MM-DD):").grid(row=1, column=0, padx=5, pady=5)
+        date_entry = tk.Entry(add_window)
+        date_entry.grid(row=1, column=1, padx=5, pady=5)
+
+        tk.Button(add_window, text="Add", command=lambda: self.add_vaccination_to_db(add_window, cow_id, vaccination_entry, date_entry, tree)).grid(row=2, column=0, columnspan=2, pady=10)
+
+    def add_vaccination_to_db(self, add_window, cow_id, vaccination_entry, date_entry, tree):
+        conn = sqlite3.connect("farm.db")
+        c = conn.cursor()
+
+        vaccination = vaccination_entry.get()
+        date = date_entry.get()
+
+        c.execute("INSERT INTO vaccinations (cow_id, vaccination, date) VALUES (?, ?, ?)", (cow_id, vaccination, date))
+
+        conn.commit()
+        conn.close()
+
+        add_window.destroy()
+        tree.insert("", "end", values=(vaccination, date))
+
 
     def edit_vaccination(self, cow_id, tree):
         pass
