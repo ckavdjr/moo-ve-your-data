@@ -34,6 +34,8 @@ class FarmApp:
         ttk.Button(btn_frame, text="Add Cow", command=self.add_cow).grid(row=0, column=0, padx=5)
         ttk.Button(btn_frame, text="Edit Cow", command=self.edit_cow).grid(row=0, column=1, padx=5)
         ttk.Button(btn_frame, text="Delete Cow", command=self.delete_cow).grid(row=0, column=2, padx=5)
+        ttk.Button(btn_frame, text="Show Medical History", command=self.show_medical_history).grid(row=0, column=3, padx=5)
+
 
     def load_data(self):
         conn = sqlite3.connect("farm.db")
@@ -197,6 +199,91 @@ class FarmApp:
 
         # Remove the selected item from the treeview
         self.tree.delete(selected_item[0])
+
+
+    def show_medical_history(self):
+        selected_item = self.tree.selection()
+        if not selected_item:
+            return
+
+        cow_id = self.tree.item(selected_item[0], 'text')
+
+        # Create a new window to show the medical history
+        history_window = tk.Toplevel(self.root)
+        history_window.title("Medical History")
+
+        # Treeview for diseases
+        disease_frame = ttk.Frame(history_window)
+        disease_frame.pack(side=tk.LEFT, padx=10, pady=10, fill=tk.BOTH, expand=True)
+
+        disease_tree = ttk.Treeview(disease_frame, columns=("disease", "date"))
+        disease_tree.heading("#0", text="ID")
+        disease_tree.heading("disease", text="Disease")
+        disease_tree.heading("date", text="Date")
+        disease_tree.pack(expand=True, fill=tk.BOTH)
+
+        # Buttons for diseases
+        disease_btn_frame = ttk.Frame(disease_frame)
+        disease_btn_frame.pack(fill=tk.X, pady=5)
+
+        ttk.Button(disease_btn_frame, text="Add Disease", command=lambda: self.add_disease(cow_id, disease_tree)).pack(side=tk.LEFT, padx=5)
+        ttk.Button(disease_btn_frame, text="Edit Disease", command=lambda: self.edit_disease(cow_id, disease_tree)).pack(side=tk.LEFT, padx=5)
+        ttk.Button(disease_btn_frame, text="Delete Disease", command=lambda: self.delete_disease(disease_tree)).pack(side=tk.LEFT, padx=5)
+
+        # Treeview for vaccinations
+        vaccination_frame = ttk.Frame(history_window)
+        vaccination_frame.pack(side=tk.RIGHT, padx=10, pady=10, fill=tk.BOTH, expand=True)
+
+        vaccination_tree = ttk.Treeview(vaccination_frame, columns=("vaccination", "date"))
+        vaccination_tree.heading("#0", text="ID")
+        vaccination_tree.heading("vaccination", text="Vaccination")
+        vaccination_tree.heading("date", text="Date")
+        vaccination_tree.pack(expand=True, fill=tk.BOTH)
+
+        # Buttons for vaccinations
+        vaccination_btn_frame = ttk.Frame(vaccination_frame)
+        vaccination_btn_frame.pack(fill=tk.X, pady=5)
+
+        ttk.Button(vaccination_btn_frame, text="Add Vaccination", command=lambda: self.add_vaccination(cow_id, vaccination_tree)).pack(side=tk.LEFT, padx=5)
+        ttk.Button(vaccination_btn_frame, text="Edit Vaccination", command=lambda: self.edit_vaccination(cow_id, vaccination_tree)).pack(side=tk.LEFT, padx=5)
+        ttk.Button(vaccination_btn_frame, text="Delete Vaccination", command=lambda: self.delete_vaccination(vaccination_tree)).pack(side=tk.LEFT, padx=5)
+
+        conn = sqlite3.connect("farm.db")
+        c = conn.cursor()
+
+        # Retrieve diseases
+        c.execute("SELECT disease_id, disease, date FROM diseases WHERE cow_id = ?", (cow_id,))
+        disease_rows = c.fetchall()
+        for row in disease_rows:
+            disease_tree.insert("", "end", text=row[0], values=row[1:])
+
+        # Retrieve vaccinations
+        c.execute("SELECT vaccination_id, vaccination, date FROM vaccinations WHERE cow_id = ?", (cow_id,))
+        vaccination_rows = c.fetchall()
+        for row in vaccination_rows:
+            vaccination_tree.insert("", "end", text=row[0], values=row[1:])
+
+        conn.close()
+
+
+    def add_disease(self, cow_id, tree):
+        pass
+
+    def edit_disease(self, cow_id, tree):
+        pass
+
+    def delete_disease(self, tree):
+        pass
+
+    def add_vaccination(self, cow_id, tree):
+        pass
+
+    def edit_vaccination(self, cow_id, tree):
+        pass
+
+    def delete_vaccination(self, tree):
+        pass
+
 
 if __name__ == "__main__":
     root = tk.Tk()
