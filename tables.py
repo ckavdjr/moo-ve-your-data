@@ -13,7 +13,7 @@ def create_tables():
         colour VARCHAR(20),
         breed VARCHAR(20),
         identification_mark VARCHAR(50)
-    )"""
+    );"""
 
     q_deliveries = """
     CREATE TABLE IF NOT EXISTS deliveries (
@@ -21,9 +21,9 @@ def create_tables():
         parent_id INTEGER NOT NULL,
         child_id INTEGER,
         date DATE NOT NULL,
-        FOREIGN KEY(parent_id) REFERENCES cows(cow_id),
-        FOREIGN KEY(child_id) REFERENCES cows(cow_id)
-    )"""
+        FOREIGN KEY(parent_id) REFERENCES cows(cow_id) ON DELETE CASCADE ON UPDATE CASCADE,
+        FOREIGN KEY(child_id) REFERENCES cows(cow_id) ON DELETE CASCADE ON UPDATE CASCADE
+    );"""
 
     q_purchases = """
     CREATE TABLE IF NOT EXISTS purchases (
@@ -34,8 +34,8 @@ def create_tables():
         source VARCHAR(50),
         transactor VARCHAR(50),
         insured_amt FLOAT,
-        FOREIGN KEY(cow_id) REFERENCES cows(cow_id)
-    )"""
+        FOREIGN KEY(cow_id) REFERENCES cows(cow_id) ON DELETE CASCADE ON UPDATE CASCADE
+    );"""
 
     q_diseases = """
     CREATE TABLE IF NOT EXISTS diseases (
@@ -43,8 +43,8 @@ def create_tables():
         cow_id INTEGER NOT NULL,
         disease VARCHAR(30) NOT NULL,
         date DATE,
-        FOREIGN KEY(cow_id) REFERENCES cows(cow_id)
-    )"""
+        FOREIGN KEY(cow_id) REFERENCES cows(cow_id) ON DELETE CASCADE ON UPDATE CASCADE
+    );"""
 
     q_vaccinations = """
     CREATE TABLE IF NOT EXISTS vaccinations (
@@ -52,8 +52,8 @@ def create_tables():
         cow_id INTEGER NOT NULL,
         vaccination VARCHAR(30) NOT NULL,
         date DATE NOT NULL,
-        FOREIGN KEY(cow_id) REFERENCES cows(cow_id)
-    )"""
+        FOREIGN KEY(cow_id) REFERENCES cows(cow_id) ON DELETE CASCADE ON UPDATE CASCADE
+    );"""
 
     q_milk = """
     CREATE TABLE IF NOT EXISTS milk (
@@ -71,8 +71,8 @@ def create_tables():
         oct FLOAT,
         nov FLOAT,
         dec FLOAT,
-        FOREIGN KEY(cow_id) REFERENCES cows(cow_id)
-    )"""
+        FOREIGN KEY(cow_id) REFERENCES cows(cow_id) ON DELETE CASCADE ON UPDATE CASCADE
+    );"""
 
     try:
         c.execute(q_cows)
