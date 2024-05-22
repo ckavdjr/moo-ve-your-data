@@ -10,7 +10,6 @@ class FarmApp:
         self.create_main_frame()
         self.create_treeview()
         self.create_buttons()
-        
         self.load_data()
 
     def create_main_frame(self):
@@ -30,12 +29,10 @@ class FarmApp:
     def create_buttons(self):
         btn_frame = ttk.Frame(self.main_frame)
         btn_frame.pack(pady=5)
-
         ttk.Button(btn_frame, text="Add Cow", command=self.add_cow).grid(row=0, column=0, padx=5)
         ttk.Button(btn_frame, text="Edit Cow", command=self.edit_cow).grid(row=0, column=1, padx=5)
         ttk.Button(btn_frame, text="Delete Cow", command=self.delete_cow).grid(row=0, column=2, padx=5)
         ttk.Button(btn_frame, text="Show Medical History", command=self.show_medical_history).grid(row=0, column=3, padx=5)
-
 
     def load_data(self):
         conn = sqlite3.connect("farm.db")
@@ -48,6 +45,7 @@ class FarmApp:
             self.tree.insert("", "end", text=row[0], values=row[1:])
 
         conn.close()
+
 
     def add_cow(self):
         # Create a new window for adding a cow
@@ -280,7 +278,6 @@ class FarmApp:
 
         tk.Button(add_window, text="Add", command=lambda: self.add_disease_to_db(add_window, cow_id, disease_entry, date_entry, tree)).grid(row=2, column=0, columnspan=2, pady=10)
 
-
     def add_disease_to_db(self, add_window, cow_id, disease_entry, date_entry, tree):
         conn = sqlite3.connect("farm.db")
         c = conn.cursor()
@@ -295,7 +292,6 @@ class FarmApp:
 
         add_window.destroy()
         tree.insert("", "end", values=(disease, date))
-
 
     def edit_disease(self, cow_id, tree):
         selected_item = tree.selection()
@@ -319,7 +315,6 @@ class FarmApp:
 
         tk.Button(edit_window, text="Update", command=lambda: self.edit_disease_in_db(edit_window, disease_id, disease_entry, date_entry, tree, selected_item)).grid(row=2, column=0, columnspan=2, pady=10)
 
-
     def edit_disease_in_db(self, edit_window, disease_id, disease_entry, date_entry, tree, selected_item):
         conn = sqlite3.connect("farm.db")
         c = conn.cursor()
@@ -334,7 +329,6 @@ class FarmApp:
 
         edit_window.destroy()
         tree.item(selected_item, values=(disease, date))
-
 
     def delete_disease(self, tree):
         selected_item = tree.selection()
@@ -352,7 +346,6 @@ class FarmApp:
         conn.close()
 
         tree.delete(selected_item[0])
-
 
     def add_vaccination(self, cow_id, tree):
         add_window = tk.Toplevel(self.root)
@@ -383,7 +376,6 @@ class FarmApp:
         add_window.destroy()
         tree.insert("", "end", values=(vaccination, date))
 
-
     def edit_vaccination(self, cow_id, tree):
         selected_item = tree.selection()
         if not selected_item:
@@ -406,7 +398,6 @@ class FarmApp:
 
         tk.Button(edit_window, text="Update", command=lambda: self.edit_vaccination_in_db(edit_window, vaccination_id, vaccination_entry, date_entry, tree, selected_item)).grid(row=2, column=0, columnspan=2, pady=10)
 
-
     def edit_vaccination_in_db(self, edit_window, vaccination_id, vaccination_entry, date_entry, tree, selected_item):
         conn = sqlite3.connect("farm.db")
         c = conn.cursor()
@@ -421,7 +412,6 @@ class FarmApp:
 
         edit_window.destroy()
         tree.item(selected_item, values=(vaccination, date))
-
 
     def delete_vaccination(self, tree):
         selected_item = tree.selection()
