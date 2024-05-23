@@ -449,7 +449,8 @@ class FarmApp:
 
         # Create a Treeview to display transactions
         transaction_tree = ttk.Treeview(transaction_window, columns=("date", "amount", "source", "transactor", "insured_amt"))
-        transaction_tree.heading("#0", text="Purchase ID")
+        transaction_tree.heading("#0", text="")
+        transaction_tree.column("#0", width=0, stretch=tk.NO)
         transaction_tree.heading("date", text="Date")
         transaction_tree.heading("amount", text="Amount")
         transaction_tree.heading("source", text="Source")
