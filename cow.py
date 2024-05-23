@@ -98,6 +98,10 @@ class FarmApp:
         c.execute("INSERT INTO cows (cow_id, gender, dob, colour, breed, identification_mark) VALUES (?, ?, ?, ?, ?, ?)",
                 (cow_id, gender, dob, colour, breed, identification_mark))
 
+        # Insert an empty transaction into the purchases table
+        c.execute("INSERT INTO purchases (cow_id, date, amount, source, transactor, insured_amt) VALUES (?, '', 0, '', '', 0)",
+                (cow_id,))
+        
         conn.commit()
         conn.close()
 
