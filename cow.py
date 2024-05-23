@@ -33,6 +33,8 @@ class FarmApp:
         ttk.Button(btn_frame, text="Edit Cow", command=self.edit_cow).grid(row=0, column=1, padx=5)
         ttk.Button(btn_frame, text="Delete Cow", command=self.delete_cow).grid(row=0, column=2, padx=5)
         ttk.Button(btn_frame, text="Show Medical History", command=self.show_medical_history).grid(row=0, column=3, padx=5)
+        ttk.Button(btn_frame, text="Transaction Details", command=self.show_transaction_details).grid(row=0, column=4, padx=5)
+
 
     def load_data(self):
         conn = sqlite3.connect("farm.db")
@@ -263,7 +265,6 @@ class FarmApp:
 
         conn.close()
 
-
     def add_disease(self, cow_id, tree):
         add_window = tk.Toplevel(self.root)
         add_window.title("Add Disease")
@@ -429,6 +430,39 @@ class FarmApp:
         conn.close()
 
         tree.delete(selected_item[0])
+
+
+    def show_transaction_details(self):
+        selected_item = self.tree.selection()
+        if not selected_item:
+            return
+
+        cow_id = self.tree.item(selected_item[0], 'text')
+
+        # Create a new window to show the transaction details
+        transaction_window = tk.Toplevel(self.root)
+        transaction_window.title("Transaction Details")
+
+        # Create a Treeview to display transactions
+        transaction_tree = ttk.Treeview(transaction_window, columns=("date", "amount", "source", "transactor", "insured_amt"))
+        transaction_tree.heading("#0", text="Purchase ID")
+        transaction_tree.heading("date", text="Date")
+        transaction_tree.heading("amount", text="Amount")
+        transaction_tree.heading("source", text="Source")
+        transaction_tree.heading("transactor", text="Transactor")
+        transaction_tree.heading("insured_amt", text="Insured Amount")
+        transaction_tree.pack(expand=True, fill=tk.BOTH)
+
+        conn = sqlite3.connect("farm.db")
+        c = conn.cursor()
+
+        # Retrieve transactions
+        c.execute("SELECT purchase_id, date, amount, source, transactor, insured_amt FROM purchases WHERE cow_id = ?", (cow_id,))
+        transaction_rows = c.fetchall()
+        for row in transaction_rows:
+            transaction_tree.insert("", "end", text=row[0], values=row[1:])
+
+        conn.close()
 
 
 
