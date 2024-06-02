@@ -34,6 +34,7 @@ class FarmApp:
         ttk.Button(btn_frame, text="Delete Cow", command=self.delete_cow).grid(row=0, column=2, padx=5)
         ttk.Button(btn_frame, text="Show Medical History", command=self.show_medical_history).grid(row=0, column=3, padx=5)
         ttk.Button(btn_frame, text="Transaction Details", command=self.show_transaction_details).grid(row=0, column=4, padx=5)
+        ttk.Button(btn_frame, text="Deliveries", command=self.show_delivered_calves).grid(row=0, column=5, padx=5)
 
 
     def load_data(self):
@@ -456,6 +457,51 @@ class FarmApp:
 
         # Update the values in the treeview
         tree.item(selected_item, values=(date, amount, source, transactor, insured_amt))
+
+
+    def show_delivered_calves(self):
+        selected_item = self.tree.selection()
+        if not selected_item:
+            return
+
+        cow_id = self.tree.item(selected_item[0], 'text')
+
+        delivery_window = tk.Toplevel(self.root)
+        delivery_window.title(f"Delivered Calves of Cow {cow_id}")
+
+        delivery_tree = ttk.Treeview(delivery_window, columns=("gender", "dob", "colour", "breed", "identification_mark"))
+        delivery_tree.heading("#0", text="ID")
+        delivery_tree.heading("gender", text="Gender")
+        delivery_tree.heading("dob", text="DOB")
+        delivery_tree.heading("colour", text="Colour")
+        delivery_tree.heading("breed", text="Breed")
+        delivery_tree.heading("identification_mark", text="Identification Mark")
+        delivery_tree.pack(expand=True, fill=tk.BOTH)
+
+        delivery_btn_frame = ttk.Frame(delivery_window)
+        delivery_btn_frame.pack(pady=5)
+
+        ttk.Button(delivery_btn_frame, text="Add Delivery", command=lambda: self.add_delivery(cow_id, delivery_tree)).grid(row=0, column=0, padx=10)
+        ttk.Button(delivery_btn_frame, text="Edit Delivery", command=lambda: self.edit_delivery(delivery_tree)).grid(row=0, column=1, padx=10)
+        ttk.Button(delivery_btn_frame, text="Delete Delivery", command=lambda: self.delete_delivery(delivery_tree)).grid(row=0, column=2, padx=10)
+
+
+        conn = sqlite3.connect("farm.db")
+        c = conn.cursor()
+
+        query = """
+        SELECT c.cow_id, c.gender, c.dob, c.colour, c.breed, c.identification_mark
+        FROM cows c
+        JOIN deliveries d ON c.cow_id = d.child_id
+        WHERE d.parent_id = ?
+        """
+        c.execute(query, (cow_id,))
+        rows = c.fetchall()
+
+        for row in rows:
+            delivery_tree.insert("", "end", text=row[0], values=row[1:])
+
+        conn.close()
 
 
 
