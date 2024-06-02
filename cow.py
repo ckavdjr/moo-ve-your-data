@@ -269,11 +269,11 @@ class FarmApp:
 
         conn.close()
 
-    def add_medical(self, cow_id, tree, type):
+    def add_medical(self, cow_id, tree, medical_type):
         add_window = tk.Toplevel(self.root)
-        add_window.title(f"Add {type}")
+        add_window.title(f"Add {medical_type}")
 
-        tk.Label(add_window, text=type).grid(row=0, column=0, padx=5, pady=5)
+        tk.Label(add_window, text=medical_type).grid(row=0, column=0, padx=5, pady=5)
         medical_entry = tk.Entry(add_window)
         medical_entry.grid(row=0, column=1, padx=5, pady=5)
 
@@ -281,16 +281,16 @@ class FarmApp:
         date_entry = tk.Entry(add_window)
         date_entry.grid(row=1, column=1, padx=5, pady=5)
 
-        tk.Button(add_window, text="Add", command=lambda: self.add_medical_to_db(add_window, cow_id, medical_entry, date_entry, tree, type)).grid(row=2, column=0, columnspan=2, pady=10)
+        tk.Button(add_window, text="Add", command=lambda: self.add_medical_to_db(add_window, cow_id, medical_entry, date_entry, tree, medical_type)).grid(row=2, column=0, columnspan=2, pady=10)
 
-    def add_medical_to_db(self, add_window, cow_id, medical_entry, date_entry, tree, type):
+    def add_medical_to_db(self, add_window, cow_id, medical_entry, date_entry, tree, medical_type):
         conn = sqlite3.connect("farm.db")
         c = conn.cursor()
 
         medical = medical_entry.get()
         date = date_entry.get()
 
-        c.execute(f"INSERT INTO {type}s (cow_id, {type}, date) VALUES (?, ?, ?)", (cow_id, medical, date))
+        c.execute(f"INSERT INTO {medical_type}s (cow_id, {medical_type}, date) VALUES (?, ?, ?)", (cow_id, medical, date))
 
         conn.commit()
         conn.close()
@@ -298,7 +298,7 @@ class FarmApp:
         add_window.destroy()
         tree.insert("", "end", values=(medical, date))
 
-    def edit_medical(self, cow_id, tree, type):
+    def edit_medical(self, cow_id, tree, medical_type):
         selected_item = tree.selection()
         if not selected_item:
             return
@@ -306,9 +306,9 @@ class FarmApp:
         medical_id = tree.item(selected_item[0], 'text')
 
         edit_window = tk.Toplevel(self.root)
-        edit_window.title(f"Edit {type}")
+        edit_window.title(f"Edit {medical_type}")
 
-        tk.Label(edit_window, text=f"{type}:").grid(row=0, column=0, padx=5, pady=5)
+        tk.Label(edit_window, text=f"{medical_type}:").grid(row=0, column=0, padx=5, pady=5)
         medical_entry = tk.Entry(edit_window)
         medical_entry.grid(row=0, column=1, padx=5, pady=5)
         medical_entry.insert(0, tree.item(selected_item[0], 'values')[0])
@@ -318,16 +318,16 @@ class FarmApp:
         date_entry.grid(row=1, column=1, padx=5, pady=5)
         date_entry.insert(0, tree.item(selected_item[0], 'values')[1])
 
-        tk.Button(edit_window, text="Update", command=lambda: self.edit_medical_in_db(edit_window, medical_id, medical_entry, date_entry, tree, selected_item)).grid(row=2, column=0, columnspan=2, pady=10)
+        tk.Button(edit_window, text="Update", command=lambda: self.edit_medical_in_db(edit_window, medical_id, medical_entry, date_entry, tree, selected_item, medical_type)).grid(row=2, column=0, columnspan=2, pady=10)
 
-    def edit_medical_in_db(self, edit_window, medical_id, medical_entry, date_entry, tree, selected_item, type):
+    def edit_medical_in_db(self, edit_window, medical_id, medical_entry, date_entry, tree, selected_item, medical_type):
         conn = sqlite3.connect("farm.db")
         c = conn.cursor()
 
         medical = medical_entry.get()
         date = date_entry.get()
 
-        c.execute(f"UPDATE {type}s SET {type} = ?, date = ? WHERE {type}_id = ?", (medical, date, medical_id))
+        c.execute(f"UPDATE {medical_type}s SET {medical_type} = ?, date = ? WHERE {medical_type}_id = ?", (medical, date, medical_id))
 
         conn.commit()
         conn.close()
@@ -335,7 +335,7 @@ class FarmApp:
         edit_window.destroy()
         tree.item(selected_item, values=(medical, date))
 
-    def delete_medical(self, tree, type):
+    def delete_medical(self, tree, medical_type):
         selected_item = tree.selection()
         if not selected_item:
             return
@@ -345,7 +345,7 @@ class FarmApp:
         conn = sqlite3.connect("farm.db")
         c = conn.cursor()
 
-        c.execute(f"DELETE FROM {type}s WHERE {type}_id = ?", (medical_id,))
+        c.execute(f"DELETE FROM {medical_type}s WHERE {medical_type}_id = ?", (medical_id,))
 
         conn.commit()
         conn.close()
