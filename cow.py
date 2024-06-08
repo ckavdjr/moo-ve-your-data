@@ -469,13 +469,11 @@ class FarmApp:
         delivery_window = tk.Toplevel(self.root)
         delivery_window.title(f"Delivered Calves of Cow {cow_id}")
 
-        delivery_tree = ttk.Treeview(delivery_window, columns=("gender", "dob", "colour", "breed", "identification_mark"))
-        delivery_tree.heading("#0", text="ID")
-        delivery_tree.heading("gender", text="Gender")
-        delivery_tree.heading("dob", text="DOB")
-        delivery_tree.heading("colour", text="Colour")
-        delivery_tree.heading("breed", text="Breed")
-        delivery_tree.heading("identification_mark", text="Identification Mark")
+        delivery_tree = ttk.Treeview(delivery_window, columns=("parent_id", "child_id"))
+        delivery_tree.heading("#0", text="")
+        delivery_tree.column("#0", width=0, stretch=tk.NO)
+        delivery_tree.heading("parent_id", text="Parent ID")
+        delivery_tree.heading("child_id", text="Child ID")
         delivery_tree.pack(expand=True, fill=tk.BOTH)
 
         delivery_btn_frame = ttk.Frame(delivery_window)
@@ -485,21 +483,19 @@ class FarmApp:
         ttk.Button(delivery_btn_frame, text="Edit Delivery", command=lambda: self.edit_delivery(delivery_tree)).grid(row=0, column=1, padx=10)
         ttk.Button(delivery_btn_frame, text="Delete Delivery", command=lambda: self.delete_delivery(delivery_tree)).grid(row=0, column=2, padx=10)
 
-
         conn = sqlite3.connect("farm.db")
         c = conn.cursor()
 
         query = """
-        SELECT c.cow_id, c.gender, c.dob, c.colour, c.breed, c.identification_mark
-        FROM cows c
-        JOIN deliveries d ON c.cow_id = d.child_id
-        WHERE d.parent_id = ?
+        SELECT parent_id, child_id 
+        FROM deliveries
+        WHERE parent_id = ?
         """
         c.execute(query, (cow_id,))
         rows = c.fetchall()
 
         for row in rows:
-            delivery_tree.insert("", "end", text=row[0], values=row[1:])
+            delivery_tree.insert("", "end", values=row)
 
         conn.close()
 
