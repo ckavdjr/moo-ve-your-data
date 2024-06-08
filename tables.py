@@ -20,7 +20,6 @@ def create_tables():
         delivery_id INTEGER PRIMARY KEY AUTOINCREMENT,
         parent_id INTEGER NOT NULL,
         child_id INTEGER,
-        date DATE NOT NULL,
         FOREIGN KEY(parent_id) REFERENCES cows(cow_id) ON DELETE CASCADE ON UPDATE CASCADE,
         FOREIGN KEY(child_id) REFERENCES cows(cow_id) ON DELETE CASCADE ON UPDATE CASCADE
     );"""
