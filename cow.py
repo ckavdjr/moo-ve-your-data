@@ -500,6 +500,86 @@ class FarmApp:
         conn.close()
 
 
+    def add_delivery(self, parent_id, tree):
+        add_window = tk.Toplevel(self.root)
+        add_window.title("Add Delivery")
+
+        tk.Label(add_window, text="Child ID:").grid(row=0, column=0, padx=5, pady=5)
+        child_id_entry = tk.Entry(add_window)
+        child_id_entry.grid(row=0, column=1, padx=5, pady=5)
+
+        tk.Label(add_window, text="Date (YYYY-MM-DD):").grid(row=1, column=0, padx=5, pady=5)
+        date_entry = tk.Entry(add_window)
+        date_entry.grid(row=1, column=1, padx=5, pady=5)
+
+        tk.Button(add_window, text="Add Delivery", command=lambda: self.add_delivery_to_db(add_window, parent_id, child_id_entry, date_entry, tree)).grid(row=2, column=0, columnspan=2, pady=10)
+
+    
+    def add_delivery(self, cow_id, delivery_tree):
+        def save_delivery():
+            child_id = entry_child_id.get()
+            conn = sqlite3.connect("farm.db")
+            c = conn.cursor()
+            c.execute("INSERT INTO deliveries (parent_id, child_id) VALUES (?, ?)", (cow_id, child_id))
+            conn.commit()
+            conn.close()
+            delivery_tree.insert("", "end", values=(cow_id, child_id))
+            add_window.destroy()
+
+        add_window = tk.Toplevel(self.root)
+        add_window.title("Add Delivery")
+
+        ttk.Label(add_window, text="Child ID:").grid(row=0, column=0, padx=10, pady=10)
+        entry_child_id = ttk.Entry(add_window)
+        entry_child_id.grid(row=0, column=1, padx=10, pady=10)
+
+        ttk.Button(add_window, text="Save", command=save_delivery).grid(row=1, column=0, columnspan=2, pady=10)
+
+    def edit_delivery(self, delivery_tree):
+        selected_item = delivery_tree.selection()
+        if not selected_item:
+            return
+
+        def save_edit():
+            new_child_id = entry_child_id.get()
+            conn = sqlite3.connect("farm.db")
+            c = conn.cursor()
+            c.execute("UPDATE deliveries SET child_id = ? WHERE parent_id = ? AND child_id = ?", 
+                      (new_child_id, parent_id, old_child_id))
+            conn.commit()
+            conn.close()
+            delivery_tree.item(selected_item, values=(parent_id, new_child_id))
+            edit_window.destroy()
+
+        item = delivery_tree.item(selected_item)
+        parent_id, old_child_id = item['values']
+
+        edit_window = tk.Toplevel(self.root)
+        edit_window.title("Edit Delivery")
+
+        ttk.Label(edit_window, text="Child ID:").grid(row=0, column=0, padx=10, pady=10)
+        entry_child_id = ttk.Entry(edit_window)
+        entry_child_id.insert(0, old_child_id)
+        entry_child_id.grid(row=0, column=1, padx=10, pady=10)
+
+        ttk.Button(edit_window, text="Save", command=save_edit).grid(row=1, column=0, columnspan=2, pady=10)
+
+    def delete_delivery(self, delivery_tree):
+        selected_item = delivery_tree.selection()
+        if not selected_item:
+            return
+
+        item = delivery_tree.item(selected_item)
+        parent_id, child_id = item['values']
+
+        conn = sqlite3.connect("farm.db")
+        c = conn.cursor()
+        c.execute("DELETE FROM deliveries WHERE parent_id = ? AND child_id = ?", (parent_id, child_id))
+        conn.commit()
+        conn.close()
+        delivery_tree.delete(selected_item)
+
+
 
 if __name__ == "__main__":
     root = tk.Tk()
