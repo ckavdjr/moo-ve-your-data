@@ -17,7 +17,6 @@ class TransactionManager:
         transaction_window = tk.Toplevel(self.root)
         transaction_window.title("Transaction Details")
 
-        # Create a Treeview to display transactions
         transaction_tree = ttk.Treeview(transaction_window, columns=("date", "amount", "source", "transactor", "insured_amt"))
         transaction_tree.heading("#0", text="")
         transaction_tree.column("#0", width=0, stretch=tk.NO)
@@ -58,7 +57,6 @@ class TransactionManager:
         edit_window = tk.Toplevel(self.root)
         edit_window.title("Edit Transaction")
 
-        # Create labels and entry fields pre-filled with existing values
         ttk.Label(edit_window, text="Date:").grid(row=0, column=0, padx=5, pady=5)
         date_entry = tk.Entry(edit_window)
         date_entry.grid(row=0, column=1, padx=5, pady=5)

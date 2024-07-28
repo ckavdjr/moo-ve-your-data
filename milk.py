@@ -87,7 +87,6 @@ class MilkManager:
         conn.commit()
         conn.close()
 
-        # Update the values in milk_tree
         selected_item = tree.selection()[0]
         tree.item(selected_item, values=tuple(updates.values()))
 

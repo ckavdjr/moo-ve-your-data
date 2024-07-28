@@ -38,16 +38,13 @@ class DeliveryManager:
     def load_data(self, cow_id, delivery_tree):
         conn = sqlite3.connect("farm.db")
         c = conn.cursor()
-
         c.execute("""SELECT parent_id, child_id 
                     FROM deliveries
                     WHERE parent_id = ?""", 
                       (cow_id,))
         rows = c.fetchall()
-
         for row in rows:
             delivery_tree.insert("", "end", values=row)
-
         conn.close()
 
     def add_delivery(self, cow_id, tree):

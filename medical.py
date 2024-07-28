@@ -14,11 +14,10 @@ class MedicalManager:
 
         cow_id = self.tree.item(selected_item[0], 'text')
 
-        # Create a new window to show the medical history
         history_window = tk.Toplevel(self.root)
         history_window.title("Medical History")
 
-        # Treeview for diseases
+        # Diseases
         disease_frame = ttk.Frame(history_window)
         disease_frame.pack(side=tk.LEFT, padx=10, pady=10, fill=tk.BOTH, expand=True)
 
@@ -29,7 +28,6 @@ class MedicalManager:
         disease_tree.heading("date", text="Date")
         disease_tree.pack(expand=True, fill=tk.BOTH)
 
-        # Buttons for diseases
         disease_btn_frame = ttk.Frame(disease_frame)
         disease_btn_frame.pack(fill=tk.X, pady=5)
 
@@ -37,7 +35,7 @@ class MedicalManager:
         ttk.Button(disease_btn_frame, text="Edit Disease", command=lambda: self.edit_medical(disease_tree, "Disease")).pack(side=tk.LEFT, padx=5)
         ttk.Button(disease_btn_frame, text="Delete Disease", command=lambda: self.delete_medical(disease_tree, "Disease")).pack(side=tk.LEFT, padx=5)
 
-        # Treeview for vaccinations
+        # Vaccinations
         vaccination_frame = ttk.Frame(history_window)
         vaccination_frame.pack(side=tk.RIGHT, padx=10, pady=10, fill=tk.BOTH, expand=True)
 
@@ -48,7 +46,6 @@ class MedicalManager:
         vaccination_tree.heading("date", text="Date")
         vaccination_tree.pack(expand=True, fill=tk.BOTH)
 
-        # Buttons for vaccinations
         vaccination_btn_frame = ttk.Frame(vaccination_frame)
         vaccination_btn_frame.pack(fill=tk.X, pady=5)
 
@@ -62,13 +59,11 @@ class MedicalManager:
         conn = sqlite3.connect("farm.db")
         c = conn.cursor()
 
-        # Retrieve diseases
         c.execute("SELECT disease_id, disease, date FROM diseases WHERE cow_id = ?", (cow_id,))
         disease_rows = c.fetchall()
         for row in disease_rows:
             disease_tree.insert("", "end", text=row[0], values=row[1:])
 
-        # Retrieve vaccinations
         c.execute("SELECT vaccination_id, vaccination, date FROM vaccinations WHERE cow_id = ?", (cow_id,))
         vaccination_rows = c.fetchall()
         for row in vaccination_rows:
