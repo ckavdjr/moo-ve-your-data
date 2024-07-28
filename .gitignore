@@ -1,4 +1,10 @@
 __pycache__
+
 .venv
+
+build
+dist
+main.spec
+
 *.db
 test*

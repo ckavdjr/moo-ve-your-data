@@ -33,18 +33,18 @@ class TransactionManager:
 
         ttk.Button(btn_frame, text="Edit Transaction", command=lambda: self.edit_transaction(transaction_tree)).pack(side=tk.LEFT, padx=5)
 
+        self.load_transaction_data(self, cow_id, transaction_tree)
+
+    def load_transaction_data(self, cow_id, transaction_tree):
         conn = sqlite3.connect("farm.db")
         c = conn.cursor()
-
         c.execute("""SELECT date, amount, source, transactor, insured_amt
                     FROM purchases
                     WHERE cow_id = ?""", 
                       (cow_id,))
         rows = c.fetchall()
-        
         for row in rows:
             transaction_tree.insert("", "end", values=row)
-
         conn.close()
 
     def edit_transaction(self, tree):
@@ -59,32 +59,32 @@ class TransactionManager:
         edit_window.title("Edit Transaction")
 
         # Create labels and entry fields pre-filled with existing values
-        tk.Label(edit_window, text="Date:").grid(row=0, column=0, padx=5, pady=5)
+        ttk.Label(edit_window, text="Date:").grid(row=0, column=0, padx=5, pady=5)
         date_entry = tk.Entry(edit_window)
         date_entry.grid(row=0, column=1, padx=5, pady=5)
         date_entry.insert(0, values[0])
 
-        tk.Label(edit_window, text="Amount:").grid(row=1, column=0, padx=5, pady=5)
+        ttk.Label(edit_window, text="Amount:").grid(row=1, column=0, padx=5, pady=5)
         amount_entry = tk.Entry(edit_window)
         amount_entry.grid(row=1, column=1, padx=5, pady=5)
         amount_entry.insert(0, values[1])
 
-        tk.Label(edit_window, text="Source:").grid(row=2, column=0, padx=5, pady=5)
+        ttk.Label(edit_window, text="Source:").grid(row=2, column=0, padx=5, pady=5)
         source_entry = tk.Entry(edit_window)
         source_entry.grid(row=2, column=1, padx=5, pady=5)
         source_entry.insert(0, values[2])
 
-        tk.Label(edit_window, text="Transactor:").grid(row=3, column=0, padx=5, pady=5)
+        ttk.Label(edit_window, text="Transactor:").grid(row=3, column=0, padx=5, pady=5)
         transactor_entry = tk.Entry(edit_window)
         transactor_entry.grid(row=3, column=1, padx=5, pady=5)
         transactor_entry.insert(0, values[3])
 
-        tk.Label(edit_window, text="Insured Amount:").grid(row=4, column=0, padx=5, pady=5)
+        ttk.Label(edit_window, text="Insured Amount:").grid(row=4, column=0, padx=5, pady=5)
         insured_amt_entry = tk.Entry(edit_window)
         insured_amt_entry.grid(row=4, column=1, padx=5, pady=5)
         insured_amt_entry.insert(0, values[4])
 
-        tk.Button(edit_window, text="Update Transaction", command=lambda: self.update_transaction_in_db(edit_window, transaction_id, date_entry, amount_entry, source_entry, transactor_entry, insured_amt_entry, tree, selected_item)).grid(row=5, column=0, columnspan=2, padx=5, pady=10)
+        ttk.Button(edit_window, text="Update Transaction", command=lambda: self.update_transaction_in_db(edit_window, transaction_id, date_entry, amount_entry, source_entry, transactor_entry, insured_amt_entry, tree, selected_item)).grid(row=5, column=0, columnspan=2, padx=5, pady=10)
 
     def update_transaction_in_db(self, edit_window, transaction_id, date_entry, amount_entry, source_entry, transactor_entry, insured_amt_entry, tree, selected_item):
         date = date_entry.get()

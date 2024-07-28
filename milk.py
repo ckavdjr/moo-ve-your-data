@@ -40,6 +40,9 @@ class MilkManager:
         ttk.Button(milk_btn_frame, text="Edit Milk Production", command=lambda: self.edit_milk_production(cow_id, milk_tree)).grid(row=0, column=0, padx=10)
         ttk.Button(milk_btn_frame, text="Show Graph", command=lambda: self.plot_milk_production(cow_id)).grid(row=0, column=1, padx=10)
 
+        self.load_milk_data(self, cow_id, milk_tree)
+
+    def load_milk_data(self, cow_id, milk_tree):
         conn = sqlite3.connect("farm.db")
         c = conn.cursor()
         c.execute("""SELECT jan, feb, mar, apr, may, jun, jul, aug, sep, oct, nov, dec 
@@ -65,13 +68,13 @@ class MilkManager:
         entries = {}
 
         for i, month in enumerate(months):
-            tk.Label(edit_window, text=f"{month.capitalize()}:").grid(row=i, column=0, padx=5, pady=5)
+            ttk.Label(edit_window, text=f"{month.capitalize()}:").grid(row=i, column=0, padx=5, pady=5)
             entry = tk.Entry(edit_window)
             entry.grid(row=i, column=1, padx=5, pady=5)
             entry.insert(0, values[i] if i < len(values) else 0)  # TODO: Condition removal
             entries[month] = entry
 
-        tk.Button(edit_window, text="Update", command=lambda: self.update_milk_production_in_db(cow_id, entries, edit_window, tree)).grid(row=len(months), column=0, columnspan=2, pady=10)
+        ttk.Button(edit_window, text="Update", command=lambda: self.update_milk_production_in_db(cow_id, entries, edit_window, tree)).grid(row=len(months), column=0, columnspan=2, pady=10)
 
     def update_milk_production_in_db(self, cow_id, entries, edit_window, tree):
         updates = {month: entries[month].get() for month in entries}

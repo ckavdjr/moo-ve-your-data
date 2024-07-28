@@ -15,6 +15,7 @@ class FarmApp:
         
         self.create_main_frame()
         self.create_treeview()
+        self.initialize_manager_modules()
         self.create_buttons()
         self.load_data()
 
@@ -32,13 +33,12 @@ class FarmApp:
         self.tree.heading("identification_mark", text="Identification Mark")
         self.tree.pack(expand=True, fill=tk.BOTH)
 
-        # Initialize manager modules
+    def initialize_manager_modules(self):
         self.cow_manager = CowManager(self.root, self.tree)
         self.medical_manager = MedicalManager(self.root, self.tree)
         self.transaction_manager = TransactionManager(self.root, self.tree)
         self.delivery_manager = DeliveryManager(self.root, self.tree)
         self.milk_manager = MilkManager(self.root, self.tree)
-
 
     def create_buttons(self):
         btn_frame = ttk.Frame(self.main_frame)

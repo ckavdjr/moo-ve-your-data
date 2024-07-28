@@ -33,6 +33,9 @@ class DeliveryManager:
         ttk.Button(delivery_btn_frame, text="Edit Delivery", command=lambda: self.edit_delivery(delivery_tree)).grid(row=0, column=1, padx=10)
         ttk.Button(delivery_btn_frame, text="Delete Delivery", command=lambda: self.delete_delivery(delivery_tree)).grid(row=0, column=2, padx=10)
 
+        self.load_data(cow_id, delivery_tree)
+
+    def load_data(self, cow_id, delivery_tree):
         conn = sqlite3.connect("farm.db")
         c = conn.cursor()
 
@@ -52,7 +55,7 @@ class DeliveryManager:
         add_window.title("Add Delivery")
 
         ttk.Label(add_window, text="Child ID:").grid(row=0, column=0, padx=10, pady=10)
-        child_id_entry = ttk.Entry(add_window)
+        child_id_entry = tk.Entry(add_window)
         child_id_entry.grid(row=0, column=1, padx=10, pady=10)
 
         ttk.Button(add_window, text="Save", command=lambda: self.add_delivery_to_db(add_window, cow_id, child_id_entry, tree)).grid(row=1, column=0, columnspan=2, pady=10)
@@ -84,7 +87,7 @@ class DeliveryManager:
         edit_window.title("Edit Delivery")
         
         ttk.Label(edit_window, text="Child ID:").grid(row=0, column=0, padx=10, pady=10)
-        child_id_entry = ttk.Entry(edit_window)
+        child_id_entry = tk.Entry(edit_window)
         child_id_entry.insert(0, values[1])
         child_id_entry.grid(row=0, column=1, padx=10, pady=10)
 
@@ -119,4 +122,5 @@ class DeliveryManager:
         c.execute("DELETE FROM deliveries WHERE delivery_id = ?", (delivery_id,))
         conn.commit()
         conn.close()
+        
         tree.delete(selected_item)
