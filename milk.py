@@ -40,7 +40,7 @@ class MilkManager:
         ttk.Button(milk_btn_frame, text="Edit Milk Production", command=lambda: self.edit_milk_production(cow_id, milk_tree)).grid(row=0, column=0, padx=10)
         ttk.Button(milk_btn_frame, text="Show Graph", command=lambda: self.plot_milk_production(cow_id)).grid(row=0, column=1, padx=10)
 
-        self.load_milk_data(self, cow_id, milk_tree)
+        self.load_milk_data(cow_id, milk_tree)
 
     def load_milk_data(self, cow_id, milk_tree):
         conn = sqlite3.connect("farm.db")
