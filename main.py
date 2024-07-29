@@ -3,10 +3,10 @@ import tkinter as tk
 from tkinter import ttk
 
 from cow import CowManager
-from medical import MedicalManager
-from transaction import TransactionManager
 from delivery import DeliveryManager
+from medical import MedicalManager
 from milk import MilkManager
+from transaction import TransactionManager
 from tables import create_tables
 
 

@@ -1,7 +1,9 @@
+import sqlite3
 import tkinter as tk
 from tkinter import ttk
-import sqlite3
+
 import matplotlib.pyplot as plt
+
 
 class MilkManager:
     def __init__(self, root, tree):
