@@ -27,10 +27,10 @@ class TransactionManager:
         transaction_tree.heading("insured_amt", text="Insured Amount")
         transaction_tree.pack(expand=True, fill=tk.BOTH)
 
-        btn_frame = ttk.Frame(transaction_window)
-        btn_frame.pack(pady=5)
+        transaction_btn_frame = ttk.Frame(transaction_window)
+        transaction_btn_frame.pack(pady=5)
 
-        ttk.Button(btn_frame, text="Edit Transaction", command=lambda: self.edit_transaction(transaction_tree)).pack(side=tk.LEFT, padx=5)
+        ttk.Button(transaction_btn_frame, text="Edit Transaction", command=lambda: self.edit_transaction(transaction_tree)).pack(side=tk.LEFT, padx=5)
 
         self.load_transaction_data(self, cow_id, transaction_tree)
 

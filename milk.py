@@ -71,7 +71,7 @@ class MilkManager:
             ttk.Label(edit_window, text=f"{month.capitalize()}:").grid(row=i, column=0, padx=5, pady=5)
             entry = tk.Entry(edit_window)
             entry.grid(row=i, column=1, padx=5, pady=5)
-            entry.insert(0, values[i] if i < len(values) else 0)  # TODO: Condition removal
+            entry.insert(0, values[i])
             entries[month] = entry
 
         ttk.Button(edit_window, text="Update", command=lambda: self.update_milk_production_in_db(cow_id, entries, edit_window, tree)).grid(row=len(months), column=0, columnspan=2, pady=10)
