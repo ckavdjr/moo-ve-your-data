@@ -1,3 +1,4 @@
+import os
 import tkinter as tk
 from tkinter import ttk
 
@@ -6,6 +7,7 @@ from medical import MedicalManager
 from transaction import TransactionManager
 from delivery import DeliveryManager
 from milk import MilkManager
+from tables import create_tables
 
 
 class FarmApp:
@@ -56,6 +58,8 @@ class FarmApp:
         self.cow_manager.load_data()
 
 if __name__ == "__main__":
+    if not os.path.exists("farm.db"):
+        create_tables()
     root = tk.Tk()
     app = FarmApp(root)
     root.mainloop()
