@@ -55,7 +55,7 @@ class DeliveryManager:
         child_id_entry = tk.Entry(add_window)
         child_id_entry.grid(row=0, column=1, padx=10, pady=10)
 
-        ttk.Button(add_window, text="Save", command=lambda: self.add_delivery_to_db(add_window, cow_id, child_id_entry, tree)).grid(row=1, column=0, columnspan=2, pady=10)
+        ttk.Button(add_window, text="Add", command=lambda: self.add_delivery_to_db(add_window, cow_id, child_id_entry, tree)).grid(row=1, column=0, columnspan=2, pady=10)
 
     def add_delivery_to_db(self, add_window, cow_id, child_id_entry, tree):
         child_id = child_id_entry.get()
@@ -88,7 +88,7 @@ class DeliveryManager:
         child_id_entry.insert(0, values[1])
         child_id_entry.grid(row=0, column=1, padx=10, pady=10)
 
-        ttk.Button(edit_window, text="Save", command=lambda: self.update_delivery_in_db(edit_window, delivery_id, child_id_entry, tree, selected_item)).grid(row=1, column=0, columnspan=2, pady=10)
+        ttk.Button(edit_window, text="Update", command=lambda: self.update_delivery_in_db(edit_window, delivery_id, child_id_entry, tree, selected_item)).grid(row=1, column=0, columnspan=2, pady=10)
 
     def update_delivery_in_db(self, edit_window, delivery_id, child_id_entry, tree, selected_item):
         child_id = child_id_entry.get()

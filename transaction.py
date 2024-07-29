@@ -15,7 +15,7 @@ class TransactionManager:
         cow_id = self.tree.item(selected_item[0], 'text')
 
         transaction_window = tk.Toplevel(self.root)
-        transaction_window.title("Transaction Details")
+        transaction_window.title(f"Transaction Details of Cow {cow_id}")
 
         transaction_tree = ttk.Treeview(transaction_window, columns=("date", "amount", "source", "transactor", "insured_amt"))
         transaction_tree.heading("#0", text="")
@@ -32,7 +32,7 @@ class TransactionManager:
 
         ttk.Button(transaction_btn_frame, text="Edit Transaction", command=lambda: self.edit_transaction(transaction_tree)).pack(side=tk.LEFT, padx=5)
 
-        self.load_transaction_data(self, cow_id, transaction_tree)
+        self.load_transaction_data(cow_id, transaction_tree)
 
     def load_transaction_data(self, cow_id, transaction_tree):
         conn = sqlite3.connect("farm.db")
@@ -82,7 +82,7 @@ class TransactionManager:
         insured_amt_entry.grid(row=4, column=1, padx=5, pady=5)
         insured_amt_entry.insert(0, values[4])
 
-        ttk.Button(edit_window, text="Update Transaction", command=lambda: self.update_transaction_in_db(edit_window, transaction_id, date_entry, amount_entry, source_entry, transactor_entry, insured_amt_entry, tree, selected_item)).grid(row=5, column=0, columnspan=2, padx=5, pady=10)
+        ttk.Button(edit_window, text="Update", command=lambda: self.update_transaction_in_db(edit_window, transaction_id, date_entry, amount_entry, source_entry, transactor_entry, insured_amt_entry, tree, selected_item)).grid(row=5, column=0, columnspan=2, padx=5, pady=10)
 
     def update_transaction_in_db(self, edit_window, transaction_id, date_entry, amount_entry, source_entry, transactor_entry, insured_amt_entry, tree, selected_item):
         date = date_entry.get()

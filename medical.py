@@ -15,7 +15,7 @@ class MedicalManager:
         cow_id = self.tree.item(selected_item[0], 'text')
 
         history_window = tk.Toplevel(self.root)
-        history_window.title("Medical History")
+        history_window.title(f"Medical History of Cow {cow_id}")
 
         # Diseases
         disease_frame = ttk.Frame(history_window)
